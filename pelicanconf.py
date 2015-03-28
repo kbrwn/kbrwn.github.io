@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 AUTHOR = u'Kyle Brown'
-SITENAME = u'Kbrwn'
+SITENAME = u'kbrwn'
 SITEURL = ''
 
 PATH = 'content'
@@ -11,6 +11,8 @@ PATH = 'content'
 TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = u'en'
+
+THEME = "/home/kyle/pelican-themes/svbhack"
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
