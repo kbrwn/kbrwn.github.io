@@ -20,7 +20,7 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
-
+USER_LOGO_URL = SITEURL + '/static/images/index.jpg'
 # Blogroll
 #LINKS = (,)
 
