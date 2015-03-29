@@ -1,8 +1,8 @@
-Title: Buttermilch is awesome
-Date: 2013-08-22 16:08
-Category: Python
-Tags: python
-Author: Tony Stark
-Summary: Buttermilch is super cool.
+Title: OP
+Date: 2015-03-28 13:45
+Category: blog
+Tags: first, post
+Author: Kyle Brown
+Summary: Welcome!
 
-Buttermilch is super cool.
+github pages are super cool.
