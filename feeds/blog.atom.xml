@@ -47,7 +47,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;First things first is that I needed to add the encoding declaration to the file.&lt;/p&gt;
+&lt;p&gt;First things first, I needed to add the encoding declaration to the file.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;# -*- coding: UTF-8 -*-
 ...&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;I immediately run into an error that has me stumped:&lt;/p&gt;
@@ -60,7 +60,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
     &lt;span class="n"&gt;suits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Spades&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Diamonds&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Clubs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Hearts&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="n"&gt;uniSuits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;u&amp;#39;♠&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;♥&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;♦&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;♣&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;suit&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;uniSuits&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="o"&gt;***&lt;/span&gt;&lt;span class="n"&gt;suit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;suit&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;***&lt;/span&gt;
+        &lt;span class="n"&gt;suit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;suit&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;rank&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;ranks&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
             &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deck&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Card&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;suit&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -78,7 +78,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;The next idea I had was that it shouldn't really matter what type of data the Card class arguments are. As long as the 'suit' argument was as string it should print. So I attempted to encode the suit here in hopes that it would return correctly.&lt;/p&gt;
+&lt;p&gt;The next idea I had was that it shouldn't really matter what type of data the Card class arguments are. As long as the 'suit' argument was as string it should print. So I attempted to encode the suit in the class init.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Card&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;Generates a card with a suit, rank&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
 
@@ -90,7 +90,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Unfortunately, still no success was. My 'UnicodeEncodeError' is as prensent as ever.&lt;/p&gt;
+&lt;p&gt;Unfortunately, still no success was. My 'UnicodeEncodeError' is as present as ever.&lt;/p&gt;
 &lt;p&gt;My next step was to try and write a smaller bit of code. That I could easily more easily test and play around with the encode() function. It basically mimics what makeDeck() does but without classes. The 'card' data is stored in a tuple.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
 &lt;span class="n"&gt;deck&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;

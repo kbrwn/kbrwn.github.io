@@ -99,7 +99,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
 </pre></div>
 
 
-<p>First things first is that I needed to add the encoding declaration to the file.</p>
+<p>First things first, I needed to add the encoding declaration to the file.</p>
 <p><code># -*- coding: UTF-8 -*-
 ...</code></p>
 <p>I immediately run into an error that has me stumped:</p>
@@ -112,7 +112,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
     <span class="n">suits</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Spades&#39;</span><span class="p">,</span> <span class="s">&#39;Diamonds&#39;</span><span class="p">,</span> <span class="s">&#39;Clubs&#39;</span><span class="p">,</span> <span class="s">&#39;Hearts&#39;</span><span class="p">]</span>
     <span class="n">uniSuits</span> <span class="o">=</span> <span class="p">[</span><span class="s">u&#39;♠&#39;</span><span class="p">,</span> <span class="s">u&#39;♥&#39;</span><span class="p">,</span> <span class="s">u&#39;♦&#39;</span><span class="p">,</span> <span class="s">u&#39;♣&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">suit</span> <span class="ow">in</span> <span class="n">uniSuits</span><span class="p">:</span>
-        <span class="o">***</span><span class="n">suit</span> <span class="o">=</span> <span class="n">suit</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">***</span>
+        <span class="n">suit</span> <span class="o">=</span> <span class="n">suit</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">rank</span> <span class="ow">in</span> <span class="n">ranks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Card</span><span class="p">(</span><span class="n">suit</span><span class="p">,</span> <span class="n">rank</span><span class="p">))</span>
 </pre></div>
@@ -130,7 +130,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
 </pre></div>
 
 
-<p>The next idea I had was that it shouldn't really matter what type of data the Card class arguments are. As long as the 'suit' argument was as string it should print. So I attempted to encode the suit here in hopes that it would return correctly.</p>
+<p>The next idea I had was that it shouldn't really matter what type of data the Card class arguments are. As long as the 'suit' argument was as string it should print. So I attempted to encode the suit in the class init.</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Generates a card with a suit, rank&#39;&#39;&#39;</span>
 
@@ -142,7 +142,7 @@ I'd rather use numbers and unicode to display the symbols. Here is the current c
 </pre></div>
 
 
-<p>Unfortunately, still no success was. My 'UnicodeEncodeError' is as prensent as ever.</p>
+<p>Unfortunately, still no success was. My 'UnicodeEncodeError' is as present as ever.</p>
 <p>My next step was to try and write a smaller bit of code. That I could easily more easily test and play around with the encode() function. It basically mimics what makeDeck() does but without classes. The 'card' data is stored in a tuple.</p>
 <div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
 <span class="n">deck</span> <span class="o">=</span> <span class="p">[]</span>
