@@ -52,49 +52,162 @@ Simulating a Playing Card Deck  </title>
   </div>
   <div class="article_text">
     <p>I've been working a small project to create a game of slapjack that can be played in the terminal.
-I've got some classes built now that simutlate a deck of cards and will display the "card" as a string (ie. 'Ace of Spades') but
+I've got some classes built now that simulate a deck of cards and will display the "card" as a string (ie. 'Ace of Spades') but
 I'd rather use numbers and unicode to display the symbols. Here is the current code:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">Card</span>(<span class="n">object</span>):
-    <span class="s">&#39;&#39;&#39;Generates a card with a suit, rank&#39;&#39;&#39;</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generates a card with a suit, rank&#39;&#39;&#39;</span>
 
-    <span class="c-Singleline">##use class to create unicode representation</span>
+    <span class="c">##use class to create unicode representation</span>
 
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="k">self</span>, <span class="n">suit</span>, <span class="n">rank</span>):
-        <span class="k">self</span>.<span class="n">suit</span> = <span class="n">suit</span>
-        <span class="k">self</span>.<span class="n">rank</span> = <span class="n">rank</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suit</span><span class="p">,</span> <span class="n">rank</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suit</span> <span class="o">=</span> <span class="n">suit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>
 
-    <span class="n">def</span> <span class="n">__str__</span>(<span class="k">self</span>):
-        <span class="k">return</span> <span class="s">&#39;%s of %s&#39;</span> % (<span class="k">self</span>.<span class="n">rank</span>, <span class="k">self</span>.<span class="n">suit</span>)
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">unicode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
 
-    <span class="n">def</span> <span class="n">__repr__</span>(<span class="k">self</span>): <span class="c-Singleline"># should be used to reprensent data as it is inputed</span>
-        <span class="k">return</span> <span class="s">&#39;%s of %s&#39;</span> % (<span class="k">self</span>.<span class="n">rank</span>, <span class="k">self</span>.<span class="n">suit</span>)
+    <span class="c">#def __repr__(self): # should be used to represent data as it is inputed</span>
+        <span class="c">#return &#39;%s of %s&#39; % (self.rank, self.suit)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c"># should be used to represent data as it is inputed</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> of </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suit</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Deck</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deck</span> <span class="o">=</span> <span class="p">[]</span>
 
 
-<span class="k">class</span> <span class="n">Deck</span>(<span class="n">object</span>):
+    <span class="k">def</span> <span class="nf">makeDeck</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Generates a deck of 52 cards of Card objects&#39;&#39;&#39;</span>
 
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="k">self</span>):
-        <span class="k">self</span>.<span class="n">deck</span> = []
+        <span class="n">ranks</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Ace&#39;</span><span class="p">,</span> <span class="s">&#39;Two&#39;</span><span class="p">,</span> <span class="s">&#39;Three&#39;</span><span class="p">,</span> <span class="s">&#39;Four&#39;</span><span class="p">,</span> <span class="s">&#39;Five&#39;</span><span class="p">,</span> <span class="s">&#39;Six&#39;</span><span class="p">,</span><span class="s">&#39;Seven&#39;</span><span class="p">,</span> <span class="s">&#39;Eight&#39;</span><span class="p">,</span> <span class="s">&#39;Nine&#39;</span><span class="p">,</span> <span class="s">&#39;Ten&#39;</span><span class="p">,</span> <span class="s">&#39;Jack&#39;</span><span class="p">,</span><span class="s">&#39;Queen&#39;</span><span class="p">,</span> <span class="s">&#39;King&#39;</span><span class="p">]</span>
+        <span class="n">suits</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Spades&#39;</span><span class="p">,</span> <span class="s">&#39;Diamonds&#39;</span><span class="p">,</span> <span class="s">&#39;Clubs&#39;</span><span class="p">,</span> <span class="s">&#39;Hearts&#39;</span><span class="p">]</span>
 
+        <span class="k">for</span> <span class="n">suit</span> <span class="ow">in</span> <span class="n">suits</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rank</span> <span class="ow">in</span> <span class="n">ranks</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Card</span><span class="p">(</span><span class="n">suit</span><span class="p">,</span> <span class="n">rank</span><span class="p">))</span>
+        <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span>
 
-    <span class="n">def</span> <span class="n">makeDeck</span>(<span class="k">self</span>):
-        <span class="s">&#39;&#39;&#39;Generates a deck of 52 cards of Card objects&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Prints a card from deck if it hasn&#39;t been played before&#39;&#39;&#39;</span>
 
-        <span class="n">ranks</span> = [<span class="s">&#39;Ace&#39;</span>, <span class="s">&#39;Two&#39;</span>, <span class="s">&#39;Three&#39;</span>, <span class="s">&#39;Four&#39;</span>, <span class="s">&#39;Five&#39;</span>, <span class="s">&#39;Six&#39;</span>,<span class="s">&#39;Seven&#39;</span>, <span class="s">&#39;Eight&#39;</span>, <span class="s">&#39;Nine&#39;</span>, <span class="s">&#39;Ten&#39;</span>, <span class="s">&#39;Jack&#39;</span>,<span class="s">&#39;Queen&#39;</span>, <span class="s">&#39;King&#39;</span>]
-        <span class="n">suits</span> = [<span class="s">&#39;Spades&#39;</span>, <span class="s">&#39;Diamonds&#39;</span>, <span class="s">&#39;Clubs&#39;</span>, <span class="s">&#39;Hearts&#39;</span>]
-
-        <span class="k">for</span> <span class="n">suit</span> <span class="n">in</span> <span class="n">suits:</span>
-            <span class="k">for</span> <span class="n">rank</span> <span class="n">in</span> <span class="n">ranks:</span>
-                <span class="k">self</span>.<span class="n">deck</span>.<span class="n">append</span>(<span class="n">Card</span>(<span class="n">suit</span>, <span class="n">rank</span>))
-        <span class="nb">print</span> <span class="k">self</span>.<span class="n">deck</span>
-        <span class="k">return</span> <span class="k">self</span>.<span class="n">deck</span>
-
-    <span class="n">def</span> <span class="n">draw</span>(<span class="k">self</span>):
-        <span class="s">&#39;&#39;&#39;Prints a card from deck if it hasn&#39;</span><span class="n">t</span> <span class="n">been</span> <span class="n">played</span> <span class="o">before</span><span class="s">&#39;&#39;</span>&#39;
-
-        <span class="n">random</span>.<span class="n">shuffle</span>(<span class="k">self</span>.<span class="n">deck</span>)
-        <span class="n">card</span> = <span class="k">self</span>.<span class="n">deck</span>.<span class="nb">pop</span>()
-        <span class="nb">print</span> <span class="n">card</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="p">)</span>
+        <span class="n">card</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">print</span> <span class="n">card</span>
 </pre></div>
+
+
+<p>First things first is that I needed to add the encoding declaration to the file.</p>
+<p><code># -*- coding: UTF-8 -*-
+...</code></p>
+<p>I immediately run into an error that has me stumped:</p>
+<p><code>UnicodeEncodeError: 'ascii' codec can't encode character u'\u2663' in position 5: ordinal not in range(128)</code></p>
+<p>The first thing I tried to do was encode the 'suit' loop argument in the 'makeDeck' function.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">makeDeck</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generates a deck of 52 cards of Card objects&#39;&#39;&#39;</span>
+
+    <span class="n">ranks</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">,</span> <span class="s">&#39;4&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">,</span><span class="s">&#39;7&#39;</span><span class="p">,</span> <span class="s">&#39;8&#39;</span><span class="p">,</span> <span class="s">&#39;9&#39;</span><span class="p">,</span> <span class="s">&#39;10&#39;</span><span class="p">,</span> <span class="s">&#39;J&#39;</span><span class="p">,</span><span class="s">&#39;Q&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">]</span>
+    <span class="n">suits</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Spades&#39;</span><span class="p">,</span> <span class="s">&#39;Diamonds&#39;</span><span class="p">,</span> <span class="s">&#39;Clubs&#39;</span><span class="p">,</span> <span class="s">&#39;Hearts&#39;</span><span class="p">]</span>
+    <span class="n">uniSuits</span> <span class="o">=</span> <span class="p">[</span><span class="s">u&#39;♠&#39;</span><span class="p">,</span> <span class="s">u&#39;♥&#39;</span><span class="p">,</span> <span class="s">u&#39;♦&#39;</span><span class="p">,</span> <span class="s">u&#39;♣&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">suit</span> <span class="ow">in</span> <span class="n">uniSuits</span><span class="p">:</span>
+        <span class="o">***</span><span class="n">suit</span> <span class="o">=</span> <span class="n">suit</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">***</span>
+        <span class="k">for</span> <span class="n">rank</span> <span class="ow">in</span> <span class="n">ranks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Card</span><span class="p">(</span><span class="n">suit</span><span class="p">,</span> <span class="n">rank</span><span class="p">))</span>
+</pre></div>
+
+
+<p>No dice. Same massive amount of failure:</p>
+<div class="highlight"><pre>[&lt;repr(&lt;game_of_slapjack.Card at 0x103865d10&gt;) failed: UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode character u&#39;\u2660&#39; in position 5: ordinal not in range(128)&gt;,
+ &lt;repr(&lt;game_of_slapjack.Card at 0x103865d50&gt;) failed: UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode character u&#39;\u2660&#39; in position 5: ordinal not in range(128)&gt;,
+ &lt;repr(&lt;game_of_slapjack.Card at 0x103865d90&gt;) failed: UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode character u&#39;\u2660&#39; in position 5: ordinal not in range(128)&gt;,
+ &lt;repr(&lt;game_of_slapjack.Card at 0x103865dd0&gt;) failed: UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode character u&#39;\u2660&#39; in position 5: ordinal not in range(128)&gt;,
+ &lt;repr(&lt;game_of_slapjack.Card at 0x103865e10&gt;) failed: UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode character u&#39;\u2660&#39; in position 5: ordinal not in range(128)&gt;,
+ &lt;repr(&lt;game_of_slapjack.Card at 0x103865e50&gt;) failed: UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode character u&#39;\u2660&#39; in position 5: ordinal not in range(128)&gt;,
+ &lt;repr(&lt;game_of_slapjack.Card at 0x103865e90&gt;) failed: UnicodeEncodeError: &#39;ascii&#39; codec can&#39;t encode character u&#39;\u2660&#39; in position 5: ordinal not in range(128)&gt;
+...
+</pre></div>
+
+
+<p>The next idea I had was that it shouldn't really matter what type of data the Card class arguments are. As long as the 'suit' argument was as string it should print. So I attempted to encode the suit here in hopes that it would return correctly.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generates a card with a suit, rank&#39;&#39;&#39;</span>
+
+    <span class="c">##use class to create unicode representation</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suit</span><span class="p">,</span> <span class="n">rank</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suit</span> <span class="o">=</span> <span class="n">suit</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Unfortunately, still no success was. My 'UnicodeEncodeError' is as prensent as ever.</p>
+<p>My next step was to try and write a smaller bit of code. That I could easily more easily test and play around with the encode() function. It basically mimics what makeDeck() does but without classes. The 'card' data is stored in a tuple.</p>
+<div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="n">deck</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ranks</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">,</span> <span class="s">&#39;4&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">,</span><span class="s">&#39;7&#39;</span><span class="p">,</span> <span class="s">&#39;8&#39;</span><span class="p">,</span> <span class="s">&#39;9&#39;</span><span class="p">,</span> <span class="s">&#39;10&#39;</span><span class="p">,</span> <span class="s">&#39;J&#39;</span><span class="p">,</span><span class="s">&#39;Q&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">]</span>
+<span class="n">uniSuits</span> <span class="o">=</span> <span class="p">[</span><span class="s">u&#39;♠&#39;</span><span class="p">,</span> <span class="s">u&#39;♥&#39;</span><span class="p">,</span> <span class="s">u&#39;♦&#39;</span><span class="p">,</span> <span class="s">u&#39;♣&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">suit</span> <span class="ow">in</span> <span class="n">uniSuits</span><span class="p">:</span>
+    <span class="n">suit</span> <span class="o">=</span> <span class="n">suit</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">rank</span> <span class="ow">in</span> <span class="n">ranks</span><span class="p">:</span>
+        <span class="n">deck</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">suit</span><span class="p">,</span> <span class="n">rank</span><span class="p">))</span>
+<span class="k">print</span> <span class="n">deck</span>
+</pre></div>
+
+
+<p>What was really interesting is that is actually seemed to work!</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">106</span><span class="p">]:</span> <span class="n">run</span> <span class="n">gametest</span><span class="o">.</span><span class="n">py</span>
+<span class="p">[(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;4&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;7&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;8&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;9&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;10&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;J&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;Q&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;4&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;7&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;8&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;9&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;10&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;J&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;Q&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa5</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;4&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;7&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;8&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;9&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;10&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;J&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;Q&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa6</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;4&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;6&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;7&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;8&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;9&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;10&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;J&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;Q&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa3</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">)]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">107</span><span class="p">]:</span> <span class="n">c</span> <span class="o">=</span> <span class="n">deck</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">108</span><span class="p">]:</span> <span class="k">print</span> <span class="n">c</span>
+<span class="p">(</span><span class="s">&#39;</span><span class="se">\xe2\x99\xa0</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">109</span><span class="p">]:</span> <span class="k">print</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="err">♠</span>
+</pre></div>
+
+
+<p>At this point I feel like I've narrowed it down there must be some problem with my class. I googled some stuff and learned about a class method called '<strong>unicode</strong>'. I added it to my Card class:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generates a card with a suit, rank&#39;&#39;&#39;</span>
+
+    <span class="c">##use class to create unicode representation</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suit</span><span class="p">,</span> <span class="n">rank</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suit</span> <span class="o">=</span> <span class="n">suit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">unicode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> of </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suit</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Still getting that same error. Finally I decided to open up the shell an figure out what would happen if I just passed the suit argument encoded. First I tested without, then with. It produced the correct output.</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">136</span><span class="p">]:</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Card</span><span class="p">(</span><span class="s">u&#39;</span><span class="se">\u2663</span><span class="s">&#39;</span><span class="p">,</span><span class="s">&#39;K&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">137</span><span class="p">]:</span> <span class="k">print</span> <span class="n">x</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">UnicodeEncodeError</span>                        <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">137</span><span class="o">-</span><span class="mi">2</span><span class="n">d264e11d975</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="k">print</span> <span class="n">x</span>
+
+<span class="ne">UnicodeEncodeError</span><span class="p">:</span> <span class="s">&#39;ascii&#39;</span> <span class="n">codec</span> <span class="n">can</span><span class="s">&#39;t encode character u&#39;</span>\<span class="n">u2663</span><span class="s">&#39; in position 5: ordinal not in range(128)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">138</span><span class="p">]:</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Card</span><span class="p">(</span><span class="s">u&#39;</span><span class="se">\u2663</span><span class="s">&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">),</span><span class="s">&#39;K&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">139</span><span class="p">]:</span> <span class="k">print</span> <span class="n">x</span>
+<span class="n">K</span> <span class="n">of</span> <span class="err">♣</span>
+</pre></div>
+
+
+<p>At this point in the day I am feeling pretty stuck. My next guess is that there is certainly something wrong with how I am passing the 'suit' argument in the function used to build the deck but seeing as how I already tried passing it with the parameter encoded I'm not really sure where to go next.</p>
+<p>I plan to revisit this later this week.</p>
   </div>
   <div class="article_meta">
     <p>Category: <a href="/category/blog.html">blog</a></p>
