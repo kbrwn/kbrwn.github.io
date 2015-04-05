@@ -2,49 +2,45 @@
 <feed xmlns="http://www.w3.org/2005/Atom"><title>kbrwn</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2015-04-04T16:00:00+02:00</updated><entry><title>Simulating a Playing Card Deck</title><link href="/simulating-a-playing-card-deck.html" rel="alternate"></link><updated>2015-04-04T16:00:00+02:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-04-04:simulating-a-playing-card-deck.html</id><summary type="html">&lt;p&gt;I've been working a small project to create a game of slapjack that can be played in the terminal.
 I've got some classes built now that simutlate a deck of cards and will display the "card" as a string (ie. 'Ace of Spades') but
 I'd rather use numbers and unicode to display the symbols. Here is the current code:&lt;/p&gt;
-&lt;p&gt;`
-class Card(object):
-    '''Generates a card with a suit, rank'''&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;##use class to create unicode representation
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Card&lt;/span&gt;(&lt;span class="n"&gt;object&lt;/span&gt;):
+    &lt;span class="s"&gt;&amp;#39;&amp;#39;&amp;#39;Generates a card with a suit, rank&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
 
-def __init__(self, suit, rank):
-    self.suit = suit
-    self.rank = rank
+    &lt;span class="c-Singleline"&gt;##use class to create unicode representation&lt;/span&gt;
 
-def __str__(self):
-    return &amp;#39;%s of %s&amp;#39; % (self.rank, self.suit)
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;__init__&lt;/span&gt;(&lt;span class="k"&gt;self&lt;/span&gt;, &lt;span class="n"&gt;suit&lt;/span&gt;, &lt;span class="n"&gt;rank&lt;/span&gt;):
+        &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;suit&lt;/span&gt; = &lt;span class="n"&gt;suit&lt;/span&gt;
+        &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;rank&lt;/span&gt; = &lt;span class="n"&gt;rank&lt;/span&gt;
 
-def __repr__(self): # should be used to reprensent data as it is inputed
-    return &amp;#39;%s of %s&amp;#39; % (self.rank, self.suit)
-&lt;/pre&gt;&lt;/div&gt;
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;__str__&lt;/span&gt;(&lt;span class="k"&gt;self&lt;/span&gt;):
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;%s of %s&amp;#39;&lt;/span&gt; % (&lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;rank&lt;/span&gt;, &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;suit&lt;/span&gt;)
 
-
-&lt;p&gt;class Deck(object):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;def __init__(self):
-    self.deck = []
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;__repr__&lt;/span&gt;(&lt;span class="k"&gt;self&lt;/span&gt;): &lt;span class="c-Singleline"&gt;# should be used to reprensent data as it is inputed&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;%s of %s&amp;#39;&lt;/span&gt; % (&lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;rank&lt;/span&gt;, &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;suit&lt;/span&gt;)
 
 
-def makeDeck(self):
-    &amp;#39;&amp;#39;&amp;#39;Generates a deck of 52 cards of Card objects&amp;#39;&amp;#39;&amp;#39;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Deck&lt;/span&gt;(&lt;span class="n"&gt;object&lt;/span&gt;):
 
-    ranks = [&amp;#39;Ace&amp;#39;, &amp;#39;Two&amp;#39;, &amp;#39;Three&amp;#39;, &amp;#39;Four&amp;#39;, &amp;#39;Five&amp;#39;, &amp;#39;Six&amp;#39;,&amp;#39;Seven&amp;#39;, &amp;#39;Eight&amp;#39;, &amp;#39;Nine&amp;#39;, &amp;#39;Ten&amp;#39;, &amp;#39;Jack&amp;#39;,&amp;#39;Queen&amp;#39;, &amp;#39;King&amp;#39;]
-    suits = [&amp;#39;Spades&amp;#39;, &amp;#39;Diamonds&amp;#39;, &amp;#39;Clubs&amp;#39;, &amp;#39;Hearts&amp;#39;]
-    uniSuits = [&amp;#39;♠&amp;#39;,&amp;#39;♥&amp;#39;,&amp;#39;♦&amp;#39;,&amp;#39;♣&amp;#39;]
-
-    for suit in suits:
-        for rank in ranks:
-            self.deck.append(Card(suit, rank))
-    print self.deck
-    return self.deck
-
-def draw(self):
-    &amp;#39;&amp;#39;&amp;#39;Prints a card from deck if it hasn&amp;#39;t been played before&amp;#39;&amp;#39;&amp;#39;
-
-    random.shuffle(self.deck)
-    card = self.deck.pop()
-    print card
-&lt;/pre&gt;&lt;/div&gt;
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;__init__&lt;/span&gt;(&lt;span class="k"&gt;self&lt;/span&gt;):
+        &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;deck&lt;/span&gt; = []
 
 
-&lt;p&gt;`&lt;/p&gt;</summary><category term="slapjack"></category><category term="game"></category><category term="python"></category><category term="code"></category></entry><entry><title>Redirect vs Root Domain</title><link href="/redirect-vs-root-domain.html" rel="alternate"></link><updated>2015-03-29T13:35:00+02:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-03-29:redirect-vs-root-domain.html</id><summary type="html">&lt;p&gt;After finally getting this page set up properly I was quite excited to use my own URL (kbrwn.com). I purchased it from NameCheap and followed the documentation on how to set up the CNAME record properly. Unfortunately there is a significant performance hit after the set up. The page often takes 5-10 extra seconds or just doesn't load at all. So for now, kbrwn.com will just be a redirect to kbrwn.github.io. I hope to find a way to resolve this in the future.&lt;/p&gt;
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;makeDeck&lt;/span&gt;(&lt;span class="k"&gt;self&lt;/span&gt;):
+        &lt;span class="s"&gt;&amp;#39;&amp;#39;&amp;#39;Generates a deck of 52 cards of Card objects&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+
+        &lt;span class="n"&gt;ranks&lt;/span&gt; = [&lt;span class="s"&gt;&amp;#39;Ace&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Two&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Three&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Four&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Five&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Six&amp;#39;&lt;/span&gt;,&lt;span class="s"&gt;&amp;#39;Seven&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Eight&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Nine&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Ten&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Jack&amp;#39;&lt;/span&gt;,&lt;span class="s"&gt;&amp;#39;Queen&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;King&amp;#39;&lt;/span&gt;]
+        &lt;span class="n"&gt;suits&lt;/span&gt; = [&lt;span class="s"&gt;&amp;#39;Spades&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Diamonds&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Clubs&amp;#39;&lt;/span&gt;, &lt;span class="s"&gt;&amp;#39;Hearts&amp;#39;&lt;/span&gt;]
+
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;suit&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;suits:&lt;/span&gt;
+            &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;rank&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;ranks:&lt;/span&gt;
+                &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;deck&lt;/span&gt;.&lt;span class="n"&gt;append&lt;/span&gt;(&lt;span class="n"&gt;Card&lt;/span&gt;(&lt;span class="n"&gt;suit&lt;/span&gt;, &lt;span class="n"&gt;rank&lt;/span&gt;))
+        &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;deck&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;deck&lt;/span&gt;
+
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;draw&lt;/span&gt;(&lt;span class="k"&gt;self&lt;/span&gt;):
+        &lt;span class="s"&gt;&amp;#39;&amp;#39;&amp;#39;Prints a card from deck if it hasn&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;been&lt;/span&gt; &lt;span class="n"&gt;played&lt;/span&gt; &lt;span class="o"&gt;before&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&amp;#39;
+
+        &lt;span class="n"&gt;random&lt;/span&gt;.&lt;span class="n"&gt;shuffle&lt;/span&gt;(&lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;deck&lt;/span&gt;)
+        &lt;span class="n"&gt;card&lt;/span&gt; = &lt;span class="k"&gt;self&lt;/span&gt;.&lt;span class="n"&gt;deck&lt;/span&gt;.&lt;span class="nb"&gt;pop&lt;/span&gt;()
+        &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;card&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="slapjack"></category><category term="game"></category><category term="python"></category><category term="code"></category></entry><entry><title>Redirect vs Root Domain</title><link href="/redirect-vs-root-domain.html" rel="alternate"></link><updated>2015-03-29T13:35:00+02:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-03-29:redirect-vs-root-domain.html</id><summary type="html">&lt;p&gt;After finally getting this page set up properly I was quite excited to use my own URL (kbrwn.com). I purchased it from NameCheap and followed the documentation on how to set up the CNAME record properly. Unfortunately there is a significant performance hit after the set up. The page often takes 5-10 extra seconds or just doesn't load at all. So for now, kbrwn.com will just be a redirect to kbrwn.github.io. I hope to find a way to resolve this in the future.&lt;/p&gt;
 &lt;p&gt;This may be because of the recent DDOS attack that github has been dealing with. If it turns out to be the reason I’ll probably switch back to the proper set up.&lt;/p&gt;</summary><category term="redirect"></category><category term="github pages"></category><category term=""></category></entry><entry><title>OP</title><link href="/op.html" rel="alternate"></link><updated>2015-03-28T13:45:00+01:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-03-28:op.html</id><summary type="html">&lt;p&gt;github pages are super cool.&lt;/p&gt;</summary><category term="first"></category><category term="post"></category></entry></feed>

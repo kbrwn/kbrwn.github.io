@@ -54,51 +54,47 @@ Simulating a Playing Card Deck  </title>
     <p>I've been working a small project to create a game of slapjack that can be played in the terminal.
 I've got some classes built now that simutlate a deck of cards and will display the "card" as a string (ie. 'Ace of Spades') but
 I'd rather use numbers and unicode to display the symbols. Here is the current code:</p>
-<p>`
-class Card(object):
-    '''Generates a card with a suit, rank'''</p>
-<div class="highlight"><pre>##use class to create unicode representation
+<div class="highlight"><pre><span class="k">class</span> <span class="n">Card</span>(<span class="n">object</span>):
+    <span class="s">&#39;&#39;&#39;Generates a card with a suit, rank&#39;&#39;&#39;</span>
 
-def __init__(self, suit, rank):
-    self.suit = suit
-    self.rank = rank
+    <span class="c-Singleline">##use class to create unicode representation</span>
 
-def __str__(self):
-    return &#39;%s of %s&#39; % (self.rank, self.suit)
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="k">self</span>, <span class="n">suit</span>, <span class="n">rank</span>):
+        <span class="k">self</span>.<span class="n">suit</span> = <span class="n">suit</span>
+        <span class="k">self</span>.<span class="n">rank</span> = <span class="n">rank</span>
 
-def __repr__(self): # should be used to reprensent data as it is inputed
-    return &#39;%s of %s&#39; % (self.rank, self.suit)
+    <span class="n">def</span> <span class="n">__str__</span>(<span class="k">self</span>):
+        <span class="k">return</span> <span class="s">&#39;%s of %s&#39;</span> % (<span class="k">self</span>.<span class="n">rank</span>, <span class="k">self</span>.<span class="n">suit</span>)
+
+    <span class="n">def</span> <span class="n">__repr__</span>(<span class="k">self</span>): <span class="c-Singleline"># should be used to reprensent data as it is inputed</span>
+        <span class="k">return</span> <span class="s">&#39;%s of %s&#39;</span> % (<span class="k">self</span>.<span class="n">rank</span>, <span class="k">self</span>.<span class="n">suit</span>)
+
+
+<span class="k">class</span> <span class="n">Deck</span>(<span class="n">object</span>):
+
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="k">self</span>):
+        <span class="k">self</span>.<span class="n">deck</span> = []
+
+
+    <span class="n">def</span> <span class="n">makeDeck</span>(<span class="k">self</span>):
+        <span class="s">&#39;&#39;&#39;Generates a deck of 52 cards of Card objects&#39;&#39;&#39;</span>
+
+        <span class="n">ranks</span> = [<span class="s">&#39;Ace&#39;</span>, <span class="s">&#39;Two&#39;</span>, <span class="s">&#39;Three&#39;</span>, <span class="s">&#39;Four&#39;</span>, <span class="s">&#39;Five&#39;</span>, <span class="s">&#39;Six&#39;</span>,<span class="s">&#39;Seven&#39;</span>, <span class="s">&#39;Eight&#39;</span>, <span class="s">&#39;Nine&#39;</span>, <span class="s">&#39;Ten&#39;</span>, <span class="s">&#39;Jack&#39;</span>,<span class="s">&#39;Queen&#39;</span>, <span class="s">&#39;King&#39;</span>]
+        <span class="n">suits</span> = [<span class="s">&#39;Spades&#39;</span>, <span class="s">&#39;Diamonds&#39;</span>, <span class="s">&#39;Clubs&#39;</span>, <span class="s">&#39;Hearts&#39;</span>]
+
+        <span class="k">for</span> <span class="n">suit</span> <span class="n">in</span> <span class="n">suits:</span>
+            <span class="k">for</span> <span class="n">rank</span> <span class="n">in</span> <span class="n">ranks:</span>
+                <span class="k">self</span>.<span class="n">deck</span>.<span class="n">append</span>(<span class="n">Card</span>(<span class="n">suit</span>, <span class="n">rank</span>))
+        <span class="nb">print</span> <span class="k">self</span>.<span class="n">deck</span>
+        <span class="k">return</span> <span class="k">self</span>.<span class="n">deck</span>
+
+    <span class="n">def</span> <span class="n">draw</span>(<span class="k">self</span>):
+        <span class="s">&#39;&#39;&#39;Prints a card from deck if it hasn&#39;</span><span class="n">t</span> <span class="n">been</span> <span class="n">played</span> <span class="o">before</span><span class="s">&#39;&#39;</span>&#39;
+
+        <span class="n">random</span>.<span class="n">shuffle</span>(<span class="k">self</span>.<span class="n">deck</span>)
+        <span class="n">card</span> = <span class="k">self</span>.<span class="n">deck</span>.<span class="nb">pop</span>()
+        <span class="nb">print</span> <span class="n">card</span>
 </pre></div>
-
-
-<p>class Deck(object):</p>
-<div class="highlight"><pre>def __init__(self):
-    self.deck = []
-
-
-def makeDeck(self):
-    &#39;&#39;&#39;Generates a deck of 52 cards of Card objects&#39;&#39;&#39;
-
-    ranks = [&#39;Ace&#39;, &#39;Two&#39;, &#39;Three&#39;, &#39;Four&#39;, &#39;Five&#39;, &#39;Six&#39;,&#39;Seven&#39;, &#39;Eight&#39;, &#39;Nine&#39;, &#39;Ten&#39;, &#39;Jack&#39;,&#39;Queen&#39;, &#39;King&#39;]
-    suits = [&#39;Spades&#39;, &#39;Diamonds&#39;, &#39;Clubs&#39;, &#39;Hearts&#39;]
-    uniSuits = [&#39;♠&#39;,&#39;♥&#39;,&#39;♦&#39;,&#39;♣&#39;]
-
-    for suit in suits:
-        for rank in ranks:
-            self.deck.append(Card(suit, rank))
-    print self.deck
-    return self.deck
-
-def draw(self):
-    &#39;&#39;&#39;Prints a card from deck if it hasn&#39;t been played before&#39;&#39;&#39;
-
-    random.shuffle(self.deck)
-    card = self.deck.pop()
-    print card
-</pre></div>
-
-
-<p>`</p>
   </div>
   <div class="article_meta">
     <p>Category: <a href="/category/blog.html">blog</a></p>
