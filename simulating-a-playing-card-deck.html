@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- ## for client-side less
+  <link rel="stylesheet/less" type="text/css" href="/theme/css/style.less">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.3/less.min.js" type="text/javascript"></script>
+  -->
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Kyle Brown">
+  <meta name="description" content="Posts and writings by Kyle Brown">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="kbrwn Full Atom Feed" />
+
+<meta name="keywords" content="slapjack, game, python, code">
+
+  <title>
+Simulating a Playing Card Deck  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/images/index.jpg" alt="logo">
+      </a>
+      <h2><a href="">Kyle Brown</a></h2>
+      <p>junior sysadmin. pythonista.</p>
+      <ul>
+        <li><a href="http://twitter.com/ky1e0/" target="_blank">Twitter</a></li>
+        <li><a href="http://github.com/kbrwn" target="_blank">GitHub</a></li>
+        <li><a href="http://linkedin.com/in/kbrwn" target="_blank">Linkedin</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+<p>Posted on Sat 04 April 2015</p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h3><a href="/simulating-a-playing-card-deck.html">Simulating a Playing Card Deck</a></h3>
+  </div>
+  <div class="article_text">
+    <p>I've been working a small project to create a game of slapjack that can be played in the terminal.
+I've got some classes built now that simutlate a deck of cards and will display the "card" as a string (ie. 'Ace of Spades') but
+I'd rather use numbers and unicode to display the symbols. Here is the current code:</p>
+<p>`
+class Card(object):
+    '''Generates a card with a suit, rank'''</p>
+<div class="highlight"><pre>##use class to create unicode representation
+
+def __init__(self, suit, rank):
+    self.suit = suit
+    self.rank = rank
+
+def __str__(self):
+    return &#39;%s of %s&#39; % (self.rank, self.suit)
+
+def __repr__(self): # should be used to reprensent data as it is inputed
+    return &#39;%s of %s&#39; % (self.rank, self.suit)
+</pre></div>
+
+
+<p>class Deck(object):</p>
+<div class="highlight"><pre>def __init__(self):
+    self.deck = []
+
+
+def makeDeck(self):
+    &#39;&#39;&#39;Generates a deck of 52 cards of Card objects&#39;&#39;&#39;
+
+    ranks = [&#39;Ace&#39;, &#39;Two&#39;, &#39;Three&#39;, &#39;Four&#39;, &#39;Five&#39;, &#39;Six&#39;,&#39;Seven&#39;, &#39;Eight&#39;, &#39;Nine&#39;, &#39;Ten&#39;, &#39;Jack&#39;,&#39;Queen&#39;, &#39;King&#39;]
+    suits = [&#39;Spades&#39;, &#39;Diamonds&#39;, &#39;Clubs&#39;, &#39;Hearts&#39;]
+    uniSuits = [&#39;♠&#39;,&#39;♥&#39;,&#39;♦&#39;,&#39;♣&#39;]
+
+    for suit in suits:
+        for rank in ranks:
+            self.deck.append(Card(suit, rank))
+    print self.deck
+    return self.deck
+
+def draw(self):
+    &#39;&#39;&#39;Prints a card from deck if it hasn&#39;t been played before&#39;&#39;&#39;
+
+    random.shuffle(self.deck)
+    card = self.deck.pop()
+    print card
+</pre></div>
+
+
+<p>`</p>
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="/category/blog.html">blog</a></p>
+    <p>Tags:
+      <a href="/tag/slapjack.html">slapjack</a>,      <a href="/tag/game.html">game</a>,      <a href="/tag/python.html">python</a>,      <a href="/tag/code.html">code</a>    </p>
+  </div>
+
+
+</article>
+
+    <footer>
+<p><a href="/" class="button_accent">&larr; Back to Index</a></p>
+<script language="javascript">
+    function toggleComments() {
+        var commentDiv = document.getElementById("article_comments");
+        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
+        return false;
+    }
+</script>
+    </footer>
+
+    <div id="ending_message">
+      <p>&copy; Kyle Brown. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
+    </div>
+  </main>
+</body>
+</html>
