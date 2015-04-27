@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>kbrwn</title><link href="/" rel="alternate"></link><link href="/feeds/blog.atom.xml" rel="self"></link><id>/</id><updated>2015-04-25T18:00:00+02:00</updated><entry><title>Game of SlapJack (Part 2)</title><link href="/game-of-slapjack-part-2.html" rel="alternate"></link><updated>2015-04-25T18:00:00+02:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-04-25:game-of-slapjack-part-2.html</id><summary type="html">&lt;p&gt;This is the second post is a series about coding a game of slapjack that can be played in the terminal. I have made a significant amount of progress since my last (first) post. I decided to use a library called curtsies for adding color as well as managing keyboard input from the user.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>kbrwn</title><link href="/" rel="alternate"></link><link href="/feeds/blog.atom.xml" rel="self"></link><id>/</id><updated>2015-04-24T18:00:00+02:00</updated><entry><title>Curtsies, Events, Color! - Game of SlapJack (Part 2)</title><link href="/curtsies-events-color-game-of-slapjack-part-2.html" rel="alternate"></link><updated>2015-04-24T18:00:00+02:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-04-24:curtsies-events-color-game-of-slapjack-part-2.html</id><summary type="html">&lt;p&gt;This is the second post is a series about coding a game of slapjack that can be played in the terminal. I have made a decent amount of progress since my last (first) post. I decided to use a library called &lt;a href="http://curtsies.readthedocs.org/en/latest/"&gt;curtsies&lt;/a&gt; for adding color as well as managing keyboard input from the user.&lt;/p&gt;
 &lt;p&gt;First things first, I was able to solve my unicode woes with some advice from my python mentor. I came up with the following code that correctly outputs the unicode suits and adds color to the red suits.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Card&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;Generates a card with a suit, rank&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
@@ -20,7 +20,7 @@
 
 
 &lt;p&gt;The red() function being applied to self.suit comes from the curtsies library.&lt;/p&gt;
-&lt;p&gt;With the printing down the next big task was to develop a way for the user to "slap" whenever a jack is displayed. I created a new function called 'play()' that waits for the user to hit the enter key. This makes use of curtsies as well.&lt;/p&gt;
+&lt;p&gt;With the printing down the next big task was to develop a way for the user to "slap" whenever a jack is displayed. I created a new function called 'play()' that can receive input from the keyboard. This makes use of curtsies heavily and is derived from the code &lt;a href="http://curtsies.readthedocs.org/en/latest/gameloop.html"&gt;example&lt;/a&gt; from the documentation.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;play&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="n"&gt;game&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Game&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
     &lt;span class="n"&gt;dt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
@@ -46,7 +46,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;This new function required me to create two new classes called 'Game' that included functions that get called by 'play()' based on user interaction and 'Frame' which is used for event scheduling by curtsies.&lt;/p&gt;
+&lt;p&gt;This new function required me to create two new classes. One called 'Game' that included functions that get called by 'play()' based on user interaction and 'Frame' which is used for event scheduling by curtsies.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;curtsies&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;events&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ScheduledEvent&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;pass&lt;/span&gt;
 
@@ -104,7 +104,7 @@ e =r
 
 
 &lt;p&gt;Success!&lt;/p&gt;
-&lt;p&gt;I added an if-loop to make sure the ENTER key could be singled out. ENTER is equivalent to u'&lt;Ctrl-j&gt;' in the curtsies library.&lt;/p&gt;
+&lt;p&gt;I added an if-loop to make sure the ENTER key could be singled out. ENTER is equivalent to 'Ctrl-j' in the curtsies library.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;process_event&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="c"&gt;# put logic for scoring and stuff&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;u&amp;#39;&amp;lt;Ctrl-j&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
@@ -137,7 +137,7 @@ e =&amp;lt;Ctrl-j&amp;gt;
 &lt;p&gt;&lt;a href="http://pyvideo.org/video/3455/terminal-whispering"&gt;Terminal whispering&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;I was quite sick so I didn’t get to code as much last week as I would have liked. For my game of slapjack program I have begun to test out a new library called “curtsies.” I learned about it from the Terminal Whispering talk listed above. It has decent wrapper for the python threading libraries but I haven’t quite gotten the code where I want it to be.&lt;/p&gt;
 &lt;p&gt;Django has been on my mind a lot lately. I have started to dive into the django tutorial as well as the “Tango with Django” book. I hope to really pick up some webdev foo as I go through them.&lt;/p&gt;
-&lt;p&gt;Check back soon for a A Game of Slapjack  - part 2!&lt;/p&gt;</summary><category term="python"></category><category term="update"></category></entry><entry><title>Simulating a Playing Card Deck</title><link href="/simulating-a-playing-card-deck.html" rel="alternate"></link><updated>2015-04-04T16:00:00+02:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-04-04:simulating-a-playing-card-deck.html</id><summary type="html">&lt;p&gt;I've been working a small project to create a game of slapjack that can be played in the terminal.
+&lt;p&gt;Check back soon for a A Game of Slapjack  - part 2!&lt;/p&gt;</summary><category term="python"></category><category term="update"></category></entry><entry><title>Simulating a Playing Card Deck - Game of SlapJack (Part 1)</title><link href="/simulating-a-playing-card-deck-game-of-slapjack-part-1.html" rel="alternate"></link><updated>2015-04-04T16:00:00+02:00</updated><author><name>Kyle Brown</name></author><id>tag:,2015-04-04:simulating-a-playing-card-deck-game-of-slapjack-part-1.html</id><summary type="html">&lt;p&gt;I've been working a small project to create a game of slapjack that can be played in the terminal.
 I've got some classes built now that simulate a deck of cards and will display the "card" as a string (ie. 'Ace of Spades') but
 I'd rather use numbers and unicode to display the symbols. Here is the current code:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Card&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;

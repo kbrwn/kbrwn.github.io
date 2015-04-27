@@ -21,7 +21,7 @@
 <meta name="keywords" content="slapjack, game, python, code">
 
   <title>
-Game of SlapJack (Part 2)  </title>
+Curtsies, Events, Color! - Game of SlapJack (Part 2)  </title>
 
 </head>
 
@@ -43,15 +43,15 @@ Game of SlapJack (Part 2)  </title>
 
   <main>
     <header>
-<p>Posted on Sat 25 April 2015</p>
+<p>Posted on Fri 24 April 2015</p>
     </header>
 
 <article>
   <div class="article_title">
-    <h3><a href="/game-of-slapjack-part-2.html">Game of SlapJack (Part 2)</a></h3>
+    <h3><a href="/curtsies-events-color-game-of-slapjack-part-2.html">Curtsies, Events, Color! - Game of SlapJack (Part 2)</a></h3>
   </div>
   <div class="article_text">
-    <p>This is the second post is a series about coding a game of slapjack that can be played in the terminal. I have made a significant amount of progress since my last (first) post. I decided to use a library called curtsies for adding color as well as managing keyboard input from the user.</p>
+    <p>This is the second post is a series about coding a game of slapjack that can be played in the terminal. I have made a decent amount of progress since my last (first) post. I decided to use a library called <a href="http://curtsies.readthedocs.org/en/latest/">curtsies</a> for adding color as well as managing keyboard input from the user.</p>
 <p>First things first, I was able to solve my unicode woes with some advice from my python mentor. I came up with the following code that correctly outputs the unicode suits and adds color to the red suits.</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Generates a card with a suit, rank&#39;&#39;&#39;</span>
@@ -72,7 +72,7 @@ Game of SlapJack (Part 2)  </title>
 
 
 <p>The red() function being applied to self.suit comes from the curtsies library.</p>
-<p>With the printing down the next big task was to develop a way for the user to "slap" whenever a jack is displayed. I created a new function called 'play()' that waits for the user to hit the enter key. This makes use of curtsies as well.</p>
+<p>With the printing down the next big task was to develop a way for the user to "slap" whenever a jack is displayed. I created a new function called 'play()' that can receive input from the keyboard. This makes use of curtsies heavily and is derived from the code <a href="http://curtsies.readthedocs.org/en/latest/gameloop.html">example</a> from the documentation.</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">play</span><span class="p">():</span>
     <span class="n">game</span> <span class="o">=</span> <span class="n">Game</span><span class="p">()</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span>
@@ -98,7 +98,7 @@ Game of SlapJack (Part 2)  </title>
 </pre></div>
 
 
-<p>This new function required me to create two new classes called 'Game' that included functions that get called by 'play()' based on user interaction and 'Frame' which is used for event scheduling by curtsies.</p>
+<p>This new function required me to create two new classes. One called 'Game' that included functions that get called by 'play()' based on user interaction and 'Frame' which is used for event scheduling by curtsies.</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Frame</span><span class="p">(</span><span class="n">curtsies</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">ScheduledEvent</span><span class="p">):</span>
     <span class="k">pass</span>
 
@@ -156,7 +156,7 @@ e =r
 
 
 <p>Success!</p>
-<p>I added an if-loop to make sure the ENTER key could be singled out. ENTER is equivalent to u'<Ctrl-j>' in the curtsies library.</p>
+<p>I added an if-loop to make sure the ENTER key could be singled out. ENTER is equivalent to 'Ctrl-j' in the curtsies library.</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">process_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
     <span class="c"># put logic for scoring and stuff</span>
     <span class="k">if</span> <span class="n">e</span> <span class="o">==</span> <span class="s">u&#39;&lt;Ctrl-j&gt;&#39;</span><span class="p">:</span>
