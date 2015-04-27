@@ -116,7 +116,7 @@ Curtsies, Events, Color! - Game of SlapJack (Part 2)  </title>
 </pre></div>
 
 
-<p>'tick' is called based on the 'dt' and 'when' variables from the 'play' function. This allow for 'cards' to continuously be printed despite user interaction with the keyboard. Only pressing ESC or ENTER keys will cause other events to be called. With ESC breaking out of the loop and terminating the program.</p>
+<p>'tick' is called based on the 'dt' and 'when' variables from the 'play' function. This allow for 'cards' to continuously be printed despite user interaction with the keyboard. With ESC breaking out of the loop and terminating the program.</p>
 <div class="highlight"><pre><span class="k">with</span> <span class="n">reactor</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">reactor</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Frame</span><span class="p">):</span>

@@ -64,7 +64,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;'tick' is called based on the 'dt' and 'when' variables from the 'play' function. This allow for 'cards' to continuously be printed despite user interaction with the keyboard. Only pressing ESC or ENTER keys will cause other events to be called. With ESC breaking out of the loop and terminating the program.&lt;/p&gt;
+&lt;p&gt;'tick' is called based on the 'dt' and 'when' variables from the 'play' function. This allow for 'cards' to continuously be printed despite user interaction with the keyboard. With ESC breaking out of the loop and terminating the program.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;reactor&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;reactor&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Frame&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
