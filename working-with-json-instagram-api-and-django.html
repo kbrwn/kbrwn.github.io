@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- ## for client-side less
+  <link rel="stylesheet/less" type="text/css" href="/theme/css/style.less">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.3/less.min.js" type="text/javascript"></script>
+  -->
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Kyle Brown">
+  <meta name="description" content="Posts and writings by Kyle Brown">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="kbrwn Full Atom Feed" />
+
+<meta name="keywords" content="django, instagram, json">
+
+  <title>
+Working with JSON, Instagram API, and Django  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/images/index.jpg" alt="logo">
+      </a>
+      <h2><a href="">Kyle Brown</a></h2>
+      <p>junior sysadmin. pythonista.</p>
+      <ul>
+        <li><a href="http://twitter.com/ky1e0/" target="_blank">Twitter</a></li>
+        <li><a href="http://github.com/kbrwn" target="_blank">GitHub</a></li>
+        <li><a href="http://linkedin.com/in/kbrwn" target="_blank">Linkedin</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+<p>Posted on Wed 20 May 2015</p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h3><a href="/working-with-json-instagram-api-and-django.html">Working with JSON, Instagram API, and Django</a></h3>
+  </div>
+  <div class="article_text">
+    <p>I spent a good portion of today working on gallery portion of my eurotrip site <a href="http://kyleineurope.com">kyleineurope.com</a>. It is the second django app I am building for this site. The first was a map/suggestion function that I unfortunately never got around to writing about in a post.</p>
+<p>Goal: get URL of instagram photos tagged with #kyleineurope into DB</p>
+<p>I spent the first part of the day attempting to use the Real-time Photo Updates api. I got some code working but it ended up being pretty useless because that api doesn't actually send photo data, just updates when a user has posted a photo etc.</p>
+<p>Next I decided to just focus on making a HTTP request with my user token. Which is actually really easy to do. I knew I would be using the 'json' library and I thought I'd use 'urllib2' but since I am using python 3.4 I discovered that the package has been split up.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://api.instagram.com/v1/tags/kyleineurope/media/recent?access_token=TOKEN&#39;</span>
+
+    <span class="n">serialized_data</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialized_data</span><span class="p">)</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="s">&quot;&lt;html&gt;&lt;body&gt;&lt;pre&gt;Data: </span><span class="si">%s</span><span class="s">.&lt;/pre&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span> <span class="o">%</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Credit where it is due. I refactored the code from this stackoverflow <a href="http://stackoverflow.com/questions/14143433/making-http-request-with-django-and-deserializing-output">post</a>, but I did have to make some solid changes. First I had to update to 'urlopen' for python3 then when I ran the code I got an error.</p>
+<div class="highlight"><pre><span class="n">Traceback</span><span class="o">:</span>
+<span class="n">File</span> <span class="s2">&quot;/Users/kyle/.pyenv/versions/django-europe/lib/python3.4/site-packages/django/core/handlers/base.py&quot;</span> <span class="k">in</span> <span class="n">get_response</span>
+  <span class="mi">132</span><span class="o">.</span>                     <span class="n">response</span> <span class="o">=</span> <span class="n">wrapped_callback</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="o">*</span><span class="n">callback_args</span><span class="o">,</span> <span class="o">**</span><span class="n">callback_kwargs</span><span class="o">)</span>
+<span class="n">File</span> <span class="s2">&quot;/Users/kyle/Dropbox/programming/python/europe/europe/map/views.py&quot;</span> <span class="k">in</span> <span class="n">get_data</span>
+  <span class="mi">84</span><span class="o">.</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="na">loads</span><span class="o">(</span><span class="n">serialized_data</span><span class="o">)</span>
+<span class="n">File</span> <span class="s2">&quot;/Users/kyle/.pyenv/versions/3.4.0/lib/python3.4/json/__init__.py&quot;</span> <span class="k">in</span> <span class="n">loads</span>
+  <span class="mi">312</span><span class="o">.</span>                             <span class="n">s</span><span class="o">.</span><span class="na">__class__</span><span class="o">.</span><span class="na">__name__</span><span class="o">))</span>
+
+<span class="n">Exception</span> <span class="n">Type</span><span class="o">:</span> <span class="n">TypeError</span> <span class="n">at</span> <span class="sr">/insta/</span>
+<span class="n">Exception</span> <span class="n">Value</span><span class="o">:</span> <span class="n">the</span> <span class="n">JSON</span> <span class="n">object</span> <span class="n">must</span> <span class="n">be</span> <span class="n">str</span><span class="o">,</span> <span class="n">not</span> <span class="s1">&#39;bytes&#39;</span>
+</pre></div>
+
+
+<p>Wrestling with encoding errors in the past made this an easy fix. I just added decode() function within the json.loads() function!</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialized_data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+    <span class="o">...</span>
+</pre></div>
+
+
+<p>This gave the exact result that was expected. An HTML page at the assigned view with printed json data. Not really that exciting but still a win. Heres what the json looked like:</p>
+<div class="highlight"><pre><span class="err">Data:</span> <span class="p">{</span>
+  <span class="nt">&quot;meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;code&quot;</span><span class="p">:</span> <span class="mi">200</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;pagination&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;deprecation_warning&quot;</span><span class="p">:</span> <span class="s2">&quot;next_max_id and min_id are deprecated for this endpoint; use min_tag_id and max_tag_id instead&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;min_tag_id&quot;</span><span class="p">:</span> <span class="s2">&quot;989374681785425058&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;next_min_id&quot;</span><span class="p">:</span> <span class="s2">&quot;989374681785425058&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;created_time&quot;</span><span class="p">:</span> <span class="s2">&quot;1430009334&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;users_in_photo&quot;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;kyleineurope&quot;</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;likes&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;971311156198498282_437086398&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;images&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;standard_resolution&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://scontent.cdninstagram.com/hphotos-xpa1/t51.2885-15/e15/11195576_832303930138001_1365505853_n.jpg&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span>
+          <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">640</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;low_resolution&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://scontent.cdninstagram.com/hphotos-xpa1/t51.2885-15/s320x320/e15/11195576_832303930138001_1365505853_n.jpg&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
+          <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">320</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;thumbnail&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://scontent.cdninstagram.com/hphotos-xpa1/t51.2885-15/s150x150/e15/11195576_832303930138001_1365505853_n.jpg&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+          <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">150</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;comments&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;caption&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;byob thai #kyleineurope&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;989370101513182229&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;created_time&quot;</span><span class="p">:</span> <span class="s2">&quot;1430009334&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;from&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;kyle_brwn&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;437086398&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;profile_picture&quot;</span><span class="p">:</span> <span class="s2">&quot;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;full_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Kyle Brown&quot;</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;user_has_liked&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nt">&quot;attribution&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;Aden&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;kyle_brwn&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;437086398&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;profile_picture&quot;</span><span class="p">:</span> <span class="s2">&quot;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;full_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Kyle Brown&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;link&quot;</span><span class="p">:</span> <span class="s2">&quot;https://instagram.com/p/16ylmvld_q/&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span><span class="err">.</span>
+</pre></div>
+
+
+<p>When this data is converted to a python dictionary. It looks like so:</p>
+<div class="highlight"><pre><span class="p">{</span><span class="s">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">},</span> <span class="s">&#39;pagination&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;deprecation_warning&#39;</span><span class="p">:</span> <span class="s">&#39;next_max_id and min_id are deprecated for this endpoint; use min_tag_id and max_tag_id instead&#39;</span><span class="p">,</span> <span class="s">&#39;min_tag_id&#39;</span><span class="p">:</span> <span class="s">&#39;989374681785425058&#39;</span><span class="p">,</span> <span class="s">&#39;next_min_id&#39;</span><span class="p">:</span> <span class="s">&#39;989374681785425058&#39;</span><span class="p">},</span> <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1432161747&#39;</span><span class="p">,</span> <span class="s">&#39;users_in_photo&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;kyleineurope&#39;</span><span class="p">],</span> <span class="s">&#39;likes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[]},</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989366903381549029_437086398&#39;</span><span class="p">,</span> <span class="s">&#39;location&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;images&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;standard_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11287970_1608482129399635_1810368899_n.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">},</span> <span class="s">&#39;low_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s320x320/e15/11287970_1608482129399635_1810368899_n.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">},</span> <span class="s">&#39;thumbnail&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/s150x150/e15/11287970_1608482129399635_1810368899_n.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span> <span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">}},</span> <span class="s">&#39;comments&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&#39;WHAT IS GOING ON I CANT TAKE THIS ANYMORE&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989371580282166392&#39;</span><span class="p">,</span> <span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1432162304&#39;</span><span class="p">,</span> <span class="s">&#39;from&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;barliechewer&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;282643695&#39;</span><span class="p">,</span> <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xtp1/t51.2885-19/11111475_1558492567749782_939141763_a.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;pics&amp;video&#39;</span><span class="p">}},</span> <span class="p">{</span><span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&quot;I&#39;m building a webapp. Plz ignore&quot;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989373887442967822&#39;</span><span class="p">,</span> <span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1432162579&#39;</span><span class="p">,</span> <span class="s">&#39;from&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;kyle_brwn&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;437086398&#39;</span><span class="p">,</span> <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Kyle Brown&#39;</span><span class="p">}},</span> <span class="p">{</span><span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&#39;Excellent&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989383506517155696&#39;</span><span class="p">,</span> <span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1432163726&#39;</span><span class="p">,</span> <span class="s">&#39;from&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;barliechewer&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;282643695&#39;</span><span class="p">,</span> <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xtp1/t51.2885-19/11111475_1558492567749782_939141763_a.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;pics&amp;video&#39;</span><span class="p">}}]},</span> <span class="s">&#39;caption&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&#39;#kyleineurope&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989366905117990747&#39;</span><span class="p">,</span> <span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1432161747&#39;</span><span class="p">,</span> <span class="s">&#39;from&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;kyle_brwn&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;437086398&#39;</span><span class="p">,</span> <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Kyle Brown&#39;</span><span class="p">}},</span> <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;image&#39;</span><span class="p">,</span> <span class="s">&#39;user_has_liked&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;attribution&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;filter&#39;</span><span class="p">:</span> <span class="s">&#39;Normal&#39;</span><span class="p">,</span> <span class="s">&#39;user&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;kyle_brwn&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;437086398&#39;</span><span class="p">,</span> <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Kyle Brown&#39;</span><span class="p">},</span> <span class="s">&#39;link&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagram.com/p/267_Tsld_l/&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1430009334&#39;</span><span class="p">,</span> <span class="s">&#39;users_in_photo&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;kyleineurope&#39;</span><span class="p">],</span> <span class="s">&#39;likes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[]},</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;971311156198498282_437086398&#39;</span><span class="p">,</span> <span class="s">&#39;location&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;images&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;standard_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xpa1/t51.2885-15/e15/11195576_832303930138001_1365505853_n.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">},</span> <span class="s">&#39;low_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xpa1/t51.2885-15/s320x320/e15/11195576_832303930138001_1365505853_n.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">},</span> <span class="s">&#39;thumbnail&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xpa1/t51.2885-15/s150x150/e15/11195576_832303930138001_1365505853_n.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span> <span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">}},</span> <span class="s">&#39;comments&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[]},</span> <span class="s">&#39;caption&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&#39;byob thai #kyleineurope&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989370101513182229&#39;</span><span class="p">,</span> <span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1430009334&#39;</span><span class="p">,</span> <span class="s">&#39;from&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;kyle_brwn&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;437086398&#39;</span><span class="p">,</span> <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Kyle Brown&#39;</span><span class="p">}},</span> <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;image&#39;</span><span class="p">,</span> <span class="s">&#39;user_has_liked&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;attribution&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;filter&#39;</span><span class="p">:</span> <span class="s">&#39;Aden&#39;</span><span class="p">,</span> <span class="s">&#39;user&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;kyle_brwn&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;437086398&#39;</span><span class="p">,</span> <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&#39;</span><span class="p">,</span> <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Kyle Brown&#39;</span><span class="p">},</span> <span class="s">&#39;link&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagram.com/p/16ylmvld_q/&#39;</span><span class="p">}]}</span>
+</pre></div>
+
+
+<p>Check out those crazy nested dictionaries! I have to admit that I was pretty intimidated by this. Having never worked with JSON data before I assumed that it would be a lot easier to simply convert JSON to a dict and then django model. Not gonna happen though with all that extra junk!</p>
+<p>I started my search for a way to deal with this. I tried out a few different code snippets I found online until I came across this blog post by a developer who goes by jmhobbs.</p>
+<p><a href="http://www.velvetcache.org/2012/03/13/addressing-nested-dictionaries-in-python">Addressing Nested Dictionaries in Python</a></p>
+<p>The code was almost perfect for what I was trying to do.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">getByDotNotation</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="n">obj</span>
+  <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;.&#39;</span> <span class="p">):</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">val</span>
+</pre></div>
+
+
+<p>I imported it into the ipython shell in tried to run it what I thought was the first dictionary in the nest.</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">66</span><span class="p">]:</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;pagination&#39;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">66</span><span class="p">]:</span>
+<span class="p">{</span><span class="s">&#39;deprecation_warning&#39;</span><span class="p">:</span> <span class="s">&#39;next_max_id and min_id are deprecated for this endpoint; use min_tag_id and max_tag_id instead&#39;</span><span class="p">,</span>
+ <span class="s">&#39;min_tag_id&#39;</span><span class="p">:</span> <span class="s">&#39;989213324259744994&#39;</span><span class="p">,</span>
+ <span class="s">&#39;next_min_id&#39;</span><span class="p">:</span> <span class="s">&#39;989213324259744994&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>Success! But when I attempted to go one level further I ran into the error.</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">67</span><span class="p">]:</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;pagination.data&#39;</span><span class="p">)</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span>                                  <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">67</span><span class="o">-</span><span class="mi">24</span><span class="n">aa16ceaca0</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;pagination.data&#39;</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">57</span><span class="o">-</span><span class="n">fa13d6173c4d</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+      <span class="mi">2</span>     <span class="n">val</span> <span class="o">=</span> <span class="n">obj</span>
+      <span class="mi">3</span>     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">):</span>
+<span class="o">----&gt;</span> <span class="mi">4</span>         <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+      <span class="mi">5</span>     <span class="k">return</span> <span class="n">val</span>
+      <span class="mi">6</span>
+
+<span class="ne">KeyError</span><span class="p">:</span> <span class="s">&#39;data&#39;</span>
+</pre></div>
+
+
+<p>It turned out that data was actually not nested and I could directly run the using just 'data' as the second argument.</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">69</span><span class="p">]:</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">69</span><span class="p">]:</span>
+<span class="p">[{</span><span class="s">&#39;attribution&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+  <span class="s">&#39;caption&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1432143439&#39;</span><span class="p">,</span>
+   <span class="s">&#39;from&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Kyle Brown&#39;</span><span class="p">,</span>
+    <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;437086398&#39;</span><span class="p">,</span>
+    <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&#39;</span><span class="p">,</span>
+    <span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;kyle_brwn&#39;</span><span class="p">},</span>
+   <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989236070607871086&#39;</span><span class="p">,</span>
+   <span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&#39;#test #kyleineurope&#39;</span><span class="p">},</span>
+  <span class="s">&#39;comments&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[]},</span>
+  <span class="s">&#39;created_time&#39;</span><span class="p">:</span> <span class="s">&#39;1432143439&#39;</span><span class="p">,</span>
+  <span class="s">&#39;filter&#39;</span><span class="p">:</span> <span class="s">&#39;Normal&#39;</span><span class="p">,</span>
+  <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;989213324259744994_437086398&#39;</span><span class="p">,</span>
+  <span class="s">&#39;images&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;low_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
+    <span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s320x320/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span><span class="p">,</span>
+    <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">},</span>
+   <span class="s">&#39;standard_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span>
+    <span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span><span class="p">,</span>
+    <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">},</span>
+   <span class="s">&#39;thumbnail&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+    <span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s150x150/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span><span class="p">,</span>
+    <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">}},</span>
+  <span class="s">&#39;likes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+   <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
+     <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;10159104&#39;</span><span class="p">,</span>
+     <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xtf1/t51.2885-19/10895261_777948945615165_1376425244_a.jpg&#39;</span><span class="p">,</span>
+     <span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;jessecarpentier&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Julian&#39;</span><span class="p">,</span>
+     <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;1110154055&#39;</span><span class="p">,</span>
+     <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-19/11195654_686039221501470_556185955_a.jpg&#39;</span><span class="p">,</span>
+     <span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;briarhorn&#39;</span><span class="p">}]},</span>
+  <span class="s">&#39;link&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagram.com/p/26ZEb_ldzi/&#39;</span><span class="p">,</span>
+  <span class="s">&#39;location&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+  <span class="s">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;kyleineurope&#39;</span><span class="p">],</span>
+  <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;image&#39;</span><span class="p">,</span>
+  <span class="s">&#39;user&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;Kyle Brown&#39;</span><span class="p">,</span>
+   <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;437086398&#39;</span><span class="p">,</span>
+   <span class="s">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s">&#39;https://instagramimages-a.akamaihd.net/profiles/profile_437086398_75sq_1372285988.jpg&#39;</span><span class="p">,</span>
+   <span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;kyle_brwn&#39;</span><span class="p">},</span>
+  <span class="s">&#39;user_has_liked&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="s">&#39;users_in_photo&#39;</span><span class="p">:</span> <span class="p">[]}]</span>
+</pre></div>
+
+
+<p>Another win! On to the next level!</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">70</span><span class="p">]:</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;data.attribution&#39;</span><span class="p">)</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">70</span><span class="o">-</span><span class="mf">5e70972</span><span class="n">a87fd</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;data.attribution&#39;</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">57</span><span class="o">-</span><span class="n">fa13d6173c4d</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+      <span class="mi">2</span>     <span class="n">val</span> <span class="o">=</span> <span class="n">obj</span>
+      <span class="mi">3</span>     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">):</span>
+<span class="o">----&gt;</span> <span class="mi">4</span>         <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+      <span class="mi">5</span>     <span class="k">return</span> <span class="n">val</span>
+      <span class="mi">6</span>
+
+<span class="ne">TypeError</span><span class="p">:</span> <span class="nb">list</span> <span class="n">indices</span> <span class="n">must</span> <span class="n">be</span> <span class="n">integers</span><span class="p">,</span> <span class="ow">not</span> <span class="nb">str</span>
+</pre></div>
+
+
+<p>:(</p>
+<p>It turns out the the return from calling getByDotNotation(d, 'data') was returning a list. Not a dictionary. I did the newb thing and tried to just cast the list a dictionary. Which of course didn't work.</p>
+<div class="highlight"><pre><span class="n">r</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">76</span><span class="p">]:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="o">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span>                                <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">76</span><span class="o">-</span><span class="n">c52eb414c87f</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="ne">ValueError</span><span class="p">:</span> <span class="n">dictionary</span> <span class="n">update</span> <span class="n">sequence</span> <span class="n">element</span> <span class="c">#0 has length 15; 2 is required</span>
+</pre></div>
+
+
+<p>I had sort of a ah-ha moment where I found out I could use the .pop() function to get the dictionary out of the list.</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">83</span><span class="p">]:</span> <span class="n">r</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">84</span><span class="p">]:</span> <span class="n">rp</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</pre></div>
+
+
+<p>So when I ran the getByDotNotation to get to the next level I got pretty close to the data I wanted.</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">85</span><span class="p">]:</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="s">&#39;images&#39;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">85</span><span class="p">]:</span>
+<span class="p">{</span><span class="s">&#39;low_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
+  <span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s320x320/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span><span class="p">,</span>
+  <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">},</span>
+ <span class="s">&#39;standard_resolution&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span>
+  <span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span><span class="p">,</span>
+  <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">640</span><span class="p">},</span>
+ <span class="s">&#39;thumbnail&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;height&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s150x150/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span><span class="p">,</span>
+  <span class="s">&#39;width&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">}}</span>
+</pre></div>
+
+
+<p>Two more levels down and I was getting the exact result I needed to move on to pushing this into the DB.</p>
+<div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">87</span><span class="p">]:</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="s">&#39;images.standard_resolution.url&#39;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">87</span><span class="p">]:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span>
+
+<span class="n">I</span> <span class="n">wrote</span> <span class="n">a</span> <span class="n">small</span> <span class="n">script</span> <span class="n">to</span> <span class="n">summarize</span> <span class="n">what</span> <span class="n">I</span> <span class="n">had</span> <span class="n">done</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">ipython</span> <span class="n">shell</span><span class="p">:</span>
+
+<span class="sb">``</span><span class="err">`</span><span class="n">python</span>
+<span class="k">def</span> <span class="nf">getByDotNotation</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">obj</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;.&#39;</span> <span class="p">):</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">val</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">&#39;images.standard_resolution.url&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Onward to creating the model in my models.py file:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+
+
+<span class="k">class</span> <span class="nc">PictureModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+</pre></div>
+
+
+<p>Super clean and simple. Worked on the first migration attempt!
+Next I needed to incorporate my script into the view I had made for the GET request.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">PictureModel</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;https://api.instagram.com/v1/tags/kyleineurope/media/recent?access_token=TOKEN&#39;</span>
+
+    <span class="n">serialized_data</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialized_data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">getByDotNotation</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;.&#39;</span> <span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">addURLtoDB</span><span class="p">():</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">&#39;images.standard_resolution.url&#39;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">PictureModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">addURLtoDB</span><span class="p">()</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="s">&quot;&lt;html&gt;&lt;body&gt;&lt;pre&gt;Data: </span><span class="si">%s</span><span class="s">.&lt;/pre&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span> <span class="o">%</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+
+
+<p>I renamed the run() function from the script to addURLtoDB() for clarity. Instead of printing the data into the terminal a database object is created. This worked like a charm! Every time I reloaded on the 127.0.0.1/insta/ url a database object was being created! Unfortunately, it was the same image over and over even after I had posted a new test photo with the #kyleineurope hashtag.</p>
+<p>The solution actually ended up being a really simple modification of
+addURLtoDB() in my view function.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">addURLtoDB</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">&#39;images.standard_resolution.url&#39;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">PictureModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+
+<p>With the r.pop(0) I was able to fetch the latest image URL instead of the oldest. It felt magical! I had accomplished my goal for the day!</p>
+<p>Of course I'm not done yet! Getting the data into the db half the battle. Next I need to incorporate it into the gallery template. I am also considering extending the db to include the location tag of photos! What fun are photos if you don't know where they are taken?</p>
+<p>Please check back soon for another post! Oh and be sure to check out my eurotrip blog <a href="http://kyleineurope.com">kyleineurope!</a>. I depart next week (May 26th)!</p>
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="/category/blog.html">blog</a></p>
+    <p>Tags:
+      <a href="/tag/django.html">django</a>,      <a href="/tag/instagram.html">instagram</a>,      <a href="/tag/json.html">json</a>    </p>
+  </div>
+
+
+</article>
+
+    <footer>
+<p><a href="/" class="button_accent">&larr; Back to Index</a></p>
+<script language="javascript">
+    function toggleComments() {
+        var commentDiv = document.getElementById("article_comments");
+        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
+        return false;
+    }
+</script>
+    </footer>
+
+    <div id="ending_message">
+      <p>&copy; Kyle Brown. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
+    </div>
+  </main>
+</body>
+</html>
