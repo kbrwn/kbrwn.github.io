@@ -90,7 +90,7 @@ Working with JSON, Instagram API, and Django  </title>
 </pre></div>
 
 
-<p>This gave the exact result that was expected. An HTML page at the assigned view with printed json data. Not really that exciting but still a win. Heres what the json looked like:</p>
+<p>This gave the exact result that was expected. An HTML page at the assigned view with printed json data. Not really that exciting but still a win. Here's what the json looked like:</p>
 <div class="highlight"><pre><span class="err">Data:</span> <span class="p">{</span>
   <span class="nt">&quot;meta&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;code&quot;</span><span class="p">:</span> <span class="mi">200</span>
@@ -308,11 +308,11 @@ Working with JSON, Instagram API, and Django  </title>
 <p>Two more levels down and I was getting the exact result I needed to move on to pushing this into the DB.</p>
 <div class="highlight"><pre><span class="n">In</span> <span class="p">[</span><span class="mi">87</span><span class="p">]:</span> <span class="n">getByDotNotation</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="s">&#39;images.standard_resolution.url&#39;</span><span class="p">)</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">87</span><span class="p">]:</span> <span class="s">&#39;https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11296668_1112394082109947_172466422_n.jpg&#39;</span>
+</pre></div>
 
-<span class="n">I</span> <span class="n">wrote</span> <span class="n">a</span> <span class="n">small</span> <span class="n">script</span> <span class="n">to</span> <span class="n">summarize</span> <span class="n">what</span> <span class="n">I</span> <span class="n">had</span> <span class="n">done</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">ipython</span> <span class="n">shell</span><span class="p">:</span>
 
-<span class="sb">``</span><span class="err">`</span><span class="n">python</span>
-<span class="k">def</span> <span class="nf">getByDotNotation</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
+<p>I wrote a small script to summarize what I had done in the ipython shell:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">getByDotNotation</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">obj</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ref</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;.&#39;</span> <span class="p">):</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -379,7 +379,7 @@ addURLtoDB() in my view function.</p>
 
 <p>With the r.pop(0) I was able to fetch the latest image URL instead of the oldest. It felt magical! I had accomplished my goal for the day!</p>
 <p>Of course I'm not done yet! Getting the data into the db half the battle. Next I need to incorporate it into the gallery template. I am also considering extending the db to include the location tag of photos! What fun are photos if you don't know where they are taken?</p>
-<p>Please check back soon for another post! Oh and be sure to check out my eurotrip blog <a href="http://kyleineurope.com">kyleineurope!</a>. I depart next week (May 26th)!</p>
+<p>Please check back soon for another post! Oh and be sure to check out my eurotrip blog <a href="http://kyleineurope.com">kyleineurope!</a> I depart next week (May 26th)!</p>
   </div>
   <div class="article_meta">
     <p>Category: <a href="/category/blog.html">blog</a></p>
